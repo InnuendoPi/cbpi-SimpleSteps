@@ -26,7 +26,7 @@ class SimpleManualStep(StepBase):
             self.notifyType = "info"
         self.notify(self.heading, self.message, type=self.notifyType, timeout=None)
         if self.proceed == "Continue":
-            self.next()
+            next(self)
 
 ################################################################################
 @cbpi.step
@@ -43,7 +43,7 @@ class SimpleTargetStep(StepBase):
             self.setAutoMode(True)
         elif self.auto_mode == "Set to OFF":
             self.setAutoMode(False)
-        self.next()
+        next(self)
 
     #-------------------------------------------------------------------------------
     def setAutoMode(self, auto_state):
@@ -97,7 +97,7 @@ class SimpleActorTimer(StepBase):
         # Check if timer finished and go to next step
         if self.is_timer_finished() == True:
             self.notify("{} complete".format(self.name), "Starting the next step", timeout=None)
-            self.next()
+            next(self)
 
     #-------------------------------------------------------------------------------
     def actors_on(self):
@@ -120,7 +120,7 @@ class SimpleClearLogsStep(StepBase):
             if (log_name[-4:] == ".log") and (log_name != APP_LOG) and (LOG_SEP not in log_name):
                 remove(LOG_DIR+log_name)
 
-        self.next()
+        next(self)
 
 ################################################################################
 @cbpi.step
@@ -139,7 +139,7 @@ class SimpleSaveLogsStep(StepBase):
             if (log_name[-4:] == ".log") and (log_name != APP_LOG) and (LOG_SEP not in log_name):
                 system("cat {} > {}".format(LOG_DIR+log_name, LOG_DIR+brew_name+LOG_SEP+log_name))
 
-        self.next()
+        next(self)
 
 ################################################################################
 @cbpi.step
@@ -165,7 +165,7 @@ class SimpleToggleStep(StepBase):
 		pass
 
 	def execute(self):
-		self.next()
+		next(self)
 
 ################################################################################
 @cbpi.step
@@ -260,7 +260,7 @@ class SimpleMashStep(StepBase):
         # Check if timer finished and go to next step
         if self.is_timer_finished() is True:
             self.notify("{} complete".format(self.name), "Starting the next step", type='success', timeout=None)
-            self.next()
+            next(self)
 
 ################################################################################
 @cbpi.step
@@ -349,7 +349,7 @@ class SimpleBoilStep(StepBase):
                 self.start_timer(self.timer)
         elif self.is_timer_finished() is True:
             self.notify("{} complete".format(self.name), "Starting the next step", type='success', timeout=None)
-            self.next()
+            next(self)
         else:
             self.check_addition_timers()
 
@@ -411,7 +411,7 @@ class SimpleMessageStep(StepBase):
             if int(self.timer) == 0:
                 pass
             else:
-                self.next()
+                next(self)
 
 ################################################################################
 @cbpi.step
@@ -463,7 +463,7 @@ class SimpleWhirlpoolStep(StepBase):
                 self.notify("ERROR - Whirlpool incomplete", "Step completed without reaching internal whirlpool stage", type="danger", timeout=None)
             self.actor_off(int(self.chiller))
             self.actor_off(int(self.chillerPump))
-            self.next()
+            next(self)
         else:
             if self.get_kettle_temp(self.kettle) >= (self.get_target_temp(self.kettle)+10): #This option determines when the chiller is full on
                 self.actor_on(int(self.chiller))
@@ -513,7 +513,7 @@ class SimpleChillToTemp(StepBase):
             self.notify("Chill Stage Complete", "Kettle reached: " + str(self.get_kettle_temp(self.kettle)), type="success", timeout=None)
             self.actor_off(int(self.chiller))
             self.actor_off(int(self.chillerPump))
-            self.next()
+            next(self)
 
 ################################################################################
 @cbpi.step
@@ -565,7 +565,7 @@ class SimpleMashOutStep(StepBase):
     def hotbreak_finished(self):
         if self.stage == "hotbreak":
             self.wait_user = False
-            self.next()
+            next(self)
         else:
             self.notify("No Action Taken", "Function only works in \"hotbreak\" sub-stage. Current stage: " + self.stage, type="info", timeout=5000)
 
