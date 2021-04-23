@@ -16,6 +16,10 @@ Setzt für ein Kettle den Auto Mode auf on und die Zieltemperatur, ohne auf das 
 
 Dieser Step schaltet einen Aktor für die angegebene Zeitdauer ein.
 
+### SimpleCoolToTemp
+
+Dieser Step wartet, bis die Temperatur auf die angegebene Zieltemperatur gesunken ist. Mit diesem Step wird die Absenkung der Temperatur mit kaltem Brauwasser herbeigeführt. Bspw. Mischkreuz für Zwischenrast oder Earlsches Brauverfahren.
+
 ### SimpleChillToTemp
 
 Dieser Step schaltet einen solange Aktor ein, bis die Temperatur auf die angegebene Zieltemperatur gesunken ist. Dieser Step kann mit einem Kühlaggregat, einem Plattenwärmetauscher oder eine Kühlspirale, einem Magnetventil und einer Pumpe die Würze auf eine Zieltemperatur abkühlen.
