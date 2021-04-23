@@ -153,13 +153,13 @@ class SimpleToggleStep(StepBase):
 	def init(self):
 		if self.toggle_type == "On":
 			if self.power is not None and self.power:
-				self.actor_on(int(self.actor), self.power)
+				self.actor_on(int(self.actor), int(self.power))
 			else:
 				self.actor_on(int(self.actor))
 		if self.toggle_type == "Off":
 			self.actor_off(int(self.actor))
 		if self.toggle_type == "Power Only" and self.power is not None and self.power:
-			self.actor_power(int(self.actor), self.power)
+			self.actor_power(int(self.actor), int(self.power))
 
 	def finish(self):
 		pass
@@ -513,6 +513,29 @@ class SimpleChillToTemp(StepBase):
             self.notify("Chill Stage Complete", "Kettle reached: " + str(self.get_kettle_temp(self.kettle)), type="success", timeout=None)
             self.actor_off(int(self.chiller))
             self.actor_off(int(self.chillerPump))
+            next(self)
+
+################################################################################
+@cbpi.step
+class SimpleCoolToTemp(StepBase):
+
+    kettle = StepProperty.Kettle("Kettle", description="Kettle")
+    c_target = Property.Number("Target", configurable=True)
+    c_offset = Property.Number("Offset", configurable=True)    
+    
+    def init(self):
+        self.target = float(self.c_target)
+        self.offset = float(self.c_offset)
+        self.set_target_temp(self.target, self.kettle)
+    
+    def reset(self):
+        self.set_target_temp(self.target, self.kettle)
+
+    def finish(self):
+        self.set_target_temp(0, self.kettle)
+    
+    def execute(self):
+        if abs(self.get_kettle_temp(self.kettle) - self.target) <= self.offset:
             next(self)
 
 ################################################################################
